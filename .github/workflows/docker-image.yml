@@ -23,7 +23,7 @@ jobs:
         with:
           keyVaultName: 'secrets'
           secretsFilter: '*'
-      - run: echo ${{ env.MY-SECRET }}
+      - run: echo "${{ env.MY-SECRET }}"
       
     
   build:
