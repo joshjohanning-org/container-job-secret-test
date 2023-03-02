@@ -18,11 +18,12 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Download secrets
-        uses: gincher/azure-keyvault@v1
+      - id: kv
+        uses: DawidB/get-secret-from-keyvault@master
         with:
-          keyVaultName: 'secrets'
-          secretsFilter: '*'
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          key_vault_name: josh-key-vault-test
+          secret_name: my-secret
       - run: echo "${{ env.MY-SECRET }}"
       
     
