@@ -24,7 +24,7 @@ jobs:
   build:
     name: build
     needs: [ pre-job ]
-    uses: joshjohanning-org/reusable-workflows/.github/workflows/docker-build.yml@main
+    uses: joshjohanning-org/reusable-workflows/.github/workflows/docker-build.yml@test
     with:
       runs-on: k8s-runner
       image-repository: gh.cr
