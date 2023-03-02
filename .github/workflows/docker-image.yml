@@ -25,6 +25,7 @@ jobs:
           key_vault_name: josh-key-vault-test
           secret_name: my-secret
       - run: echo "${{ env.MY-SECRET }}"
+      - run: echo "${{ steps.kv.outputs.my-secret }}"
       
     
   build:
