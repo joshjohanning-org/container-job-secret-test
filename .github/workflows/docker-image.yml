@@ -12,8 +12,25 @@ env:
   image-repository: ghcr.io
 
 jobs:
+  other-build:
+    name: other-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Download secrets
+        uses: gincher/azure-keyvault@v1
+        with:
+          keyVaultName: 'secrets'
+          secretsFilter: '*'
+      - run: echo ${{ env.MY-SECRET }}
+      
+    
   build:
     name: build
+    needs: [ other-build ]
     uses: joshjohanning-org/reusable-workflows/.github/workflows/docker-build.yml@main
     with:
       runs-on: k8s-runner
