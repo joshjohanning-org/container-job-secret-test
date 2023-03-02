@@ -10,32 +10,26 @@ on:
   
 
 jobs:
-  other-build:
+  pre-job:
+    outputs:
+      pw: ${{ steps.get-pw.outputs.pw }}
     name: other-build
     runs-on: ubuntu-latest
     steps:
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - id: kv
-        uses: DawidB/get-secret-from-keyvault@master
-        with:
-          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          key_vault_name: josh-key-vault-test
-          secret_name: my-secret
-      - run: echo "${{ env.MY-SECRET }}"
-      - run: echo "${{ steps.kv.outputs.my-secret }}"
+      - run: echo "::add-mask::my-password"
+      - run: echo "pw=my-password" >> $GITHUB_OUTPUT
+        id: get-pw
       
     
   build:
     name: build
-    needs: [ other-build ]
+    needs: [ pre-job ]
     uses: joshjohanning-org/reusable-workflows/.github/workflows/docker-build.yml@main
     with:
       runs-on: k8s-runner
       image-repository: gh.cr
       image-name: ${{ github.repository }}
       image-tag: ${{ github.run_number }}
+      image-pw: ${{needs.pre-job.outputs.pw}}
       dockerfile-path: Dockerfile
 
